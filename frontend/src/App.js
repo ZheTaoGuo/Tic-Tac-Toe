@@ -11,7 +11,7 @@ const App = () => {
     currentPlayer: "X",
   });
   const [errorMessage, setErrorMessage] = useState("");
-  const [playerTurn, setPlayerTurn] = useState("Player A");
+  const [playerTurn, setPlayerTurn] = useState("Player X");
   const [announcement, setAnnouncement] = useState("");
 
   useEffect(() => {
