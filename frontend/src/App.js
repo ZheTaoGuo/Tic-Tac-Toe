@@ -23,7 +23,7 @@ const App = () => {
 
     socket.on("gameReset", (newGame) => {
       setGame(newGame);
-      setPlayerTurn("Player A");
+      setPlayerTurn("Player X");
       setErrorMessage("");
     });
 
@@ -109,7 +109,7 @@ const App = () => {
           return acc;
         }, []);
         if (flag !== null && positions.length > 0) {
-          announcement += `Flag ${flag} is placed at position: ${positions.join(", ")}\n`;
+          announcement += `Flag ${flag} is placed at position: ${positions.join(", ")}.\n`;
         }
       });
       }
@@ -124,10 +124,10 @@ const App = () => {
       <div className="board-border">
         <div className="board">
           {game.board.map((cell, index) => (
-            <button key={index} className={`cell ${winner && winner === cell ? "winner" : ""}`} 
+            <div key={index} className={`cell ${winner && winner === cell ? "winner" : ""}`} 
             onClick={() => makeMove(index)} 
             onKeyDown={(e) => {if (e.key === "Enter" || e.key === " ") makeMove(index);}}
-            tabIndex={0}> {cell} </button>
+            tabIndex={0}> {cell} </div>
           ))}
         </div>
         <p className="current-player">
@@ -137,7 +137,7 @@ const App = () => {
             ? `Player ${winner} wins!`
             : `Current Player: ${playerTurn}`}
         </p>
-        <p id="announce" aria-live="polite">{announcement}<br/></p>
+        <p id="announce" aria-live="assertive">{announcement}<br/></p>
         <button className="reset-button" onClick={resetGame}>
           Reset Game
         </button>

@@ -1,11 +1,11 @@
 body {
-  background-color: #512D6D;
+  background-color: #00008B;
 }
 
 .app-container {
   min-height: 100vh;
   position: relative;
-  background-color: #512D6D;
+  background-color: #00008B;
 }
 
 .title {

@@ -1,0 +1,1 @@
+[{"state":"RUNNING","moves":[],"p2":"A"},{"p1":"B","state":"RUNNING","moves":[],"p2":"A"},{"p1":"PlayerY","state":"RUNNING","moves":["1","3","2","5","8"],"p2":"PlayerX"},{"p1":"PlayerABC","p1_moves":["1"],"p2_moves":["2"],"state":"RUNNING","p2":"PlayerDEF"}]
