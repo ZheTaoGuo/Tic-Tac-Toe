@@ -12,6 +12,7 @@ const App = () => {
   });
   const [errorMessage, setErrorMessage] = useState("");
   const [playerTurn, setPlayerTurn] = useState("Player A");
+  const [announcement, setAnnouncement] = useState("");
 
   useEffect(() => {
     socket.on("moveMade", (data) => {
@@ -88,12 +89,32 @@ const App = () => {
       board: Array(9).fill(null),
       currentPlayer: "X",
     };
+    setAnnouncement("");
 
     socket.emit("resetGame", newGame);
   };
 
   const winner = calculateWinner(game.board);
 
+
+  const announceBoardStatus = (board) => {
+    let announcement = ""
+    if (board.filter((cell) => cell === null).length === 9) {
+        announcement = "No flags added yet"      
+    } else {
+      let flags = ["X", "O"];
+      flags.forEach(flag => {
+        const positions = board.reduce((acc, cell, index) => {
+          if (cell === flag) acc.push(index + 1);
+          return acc;
+        }, []);
+        if (flag !== null && positions.length > 0) {
+          announcement += `Flag ${flag} is placed at position: ${positions.join(", ")}\n`;
+        }
+      });
+      }
+    setAnnouncement(announcement);
+  }
   return (
     <div className="app-container">
       <div className="game-container">
@@ -103,28 +124,28 @@ const App = () => {
       <div className="board-border">
         <div className="board">
           {game.board.map((cell, index) => (
-            <div
-              key={index}
-              className={`cell ${winner && winner === cell ? "winner" : ""}`}
-              onClick={() => makeMove(index)}
-            >
-              {cell}
-            </div>
+            <button key={index} className={`cell ${winner && winner === cell ? "winner" : ""}`} 
+            onClick={() => makeMove(index)} 
+            onKeyDown={(e) => {if (e.key === "Enter" || e.key === " ") makeMove(index);}}
+            tabIndex={0}> {cell} </button>
           ))}
         </div>
         <p className="current-player">
+          {errorMessage && (
+          <p className="error-message">{errorMessage}</p>)}
           {winner
             ? `Player ${winner} wins!`
             : `Current Player: ${playerTurn}`}
         </p>
+        <p id="announce" aria-live="polite">{announcement}<br/></p>
         <button className="reset-button" onClick={resetGame}>
           Reset Game
         </button>
+
+        <button className="announce-button" onClick={() => announceBoardStatus(game.board)}>Announce Board</button>
       </div>
-      {errorMessage && (
-        <p className="error-message">{errorMessage}</p>
-      )}
       </div>
+
     </div>
   );
 };

@@ -1,14 +1,9 @@
 body {
-  margin: 0;
-  padding: 0;
-  left: 0;
-  right: 0;
-  background-color: red;
+  background-color: #512D6D;
 }
 
 .app-container {
-  width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   position: relative;
   background-color: #512D6D;
 }
@@ -17,14 +12,14 @@ body {
   display: flex;
   justify-content: center;
   color: white;
-  font-size: 1.5em;
+  font-size: 1em;
 }
 
 .game-container {
   position: absolute;
   height: 50vh;
   width: 50vw;
-  top: 35%;
+  top: 25%;
   left: 50%;
   transform: translate(-50% , -50% );
 }
@@ -61,17 +56,29 @@ body {
 
 .current-player {
   text-align: center;
-  margin-top: 20px;
-  font-size: 2em;
+  font-size: 1.5em;
   color: white
 }
 
 .reset-button {
   width: 50%;
   justify-self: center;
-  margin-top: 10px;
   padding: 10px 20px;
-  font-size: 2em;
+  font-size: 1.5em;
+  cursor: pointer;
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.announce-button {
+  width: 50%;
+  justify-self: center;
+  margin-top: 5px;
+  padding: 10px 20px;
+  font-size: 1.5em;
   cursor: pointer;
   background-color: #4caf50;
   color: #fff;
@@ -86,11 +93,17 @@ body {
 
 .error-message {
   color: #ff0000;
-  margin-top: 10px;
+  margin-top: 3px;
   font-size: 1.2em;
 }
 
 .winner {
   background-color: #4caf50;
+  color: #fff;
+}
+
+#announce {
+  text-align: center;
+  font-size: 1.2em;
   color: #fff;
 }
