@@ -54,15 +54,15 @@ app.get("/game", (req, res) => {
 
 //Get a new game
 app.get('/new_game', async (req, res) => {
-  if (req.query.name && req.query.name.length == 0) {
+  if (req.query.p1.length == 0 && req.query.p2.length == 0) {
     res.send({ok: false, error: "Name is required."});
     return;
   }
   if (games.length === 0 || games[games.length - 1].state !== "WAITING_FOR_PLAYERS") {
     games.push({
-      p1: req.query.name,
+      p1: req.query.p1,
       p1_moves: [],
-      p2: undefined,
+      p2: req.query.p2,
       p2_moves: [],
       state: "WAITING_FOR_PLAYERS",
 

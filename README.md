@@ -13,7 +13,7 @@ yarn start
 
 ```bash
 yarn install
-yarn start
+node index.js
 ```
 
 3. Create two browser windows

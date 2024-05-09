@@ -2,8 +2,9 @@
 import React, { useState, useEffect } from "react";
 import "./index.css"
 import { io } from "socket.io-client";
-
+import axios from "axios";
 const socket = io("http://localhost:5000");
+
 
 const App = () => {
   const [game, setGame] = useState({
@@ -13,12 +14,22 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [playerTurn, setPlayerTurn] = useState("Player X");
   const [announcement, setAnnouncement] = useState("");
+  const [declareWinner, setDeclareWinner] = useState(false);
 
   useEffect(() => {
     socket.on("moveMade", (data) => {
+      console.log("this is data", data)
       setGame(data.updatedGame);
       setPlayerTurn(data.updatedGame.currentPlayer);
       setErrorMessage("");
+      console.log("this is game", data.updatedGame)
+
+      console.log("game state", data.updatedGame.board.every(square => square !== null))
+      if (data.updatedGame.board.every(square => square !== null)) {
+        setErrorMessage("Game has ended. All squares are filled.");
+        return;
+      }
+
     });
 
     socket.on("gameReset", (newGame) => {
@@ -58,20 +69,20 @@ const App = () => {
     for (let i = 0; i < lines.length; i++) {
       const [a, b, c] = lines[i];
       if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+        console.log("winner:", squares[a]);
         return squares[a];
       }
     }
-
-    return null;
   };
 
   const makeMove = (index) => {
-    const squares = [...game.board];
-
-    if (calculateWinner(squares) || squares[index]) {
+    //TO-DO: make the post call to the express server here 
+    if (calculateWinner(game.board)) {
       setErrorMessage("Invalid move. Please try again.");
       return;
     }
+
+    const squares = [...game.board];
 
     squares[index] = game.currentPlayer;
 
@@ -85,6 +96,16 @@ const App = () => {
   };
 
   const resetGame = () => {
+    axios.get('http://localhost:5000/new_game',{
+        params: {
+          p1: "X",
+          p2: "O"
+        }
+      }).then(function (response) {
+        console.log(response);
+      }).catch(function (error) {
+        console.log(error);
+      })
     const newGame = {
       board: Array(9).fill(null),
       currentPlayer: "X",
@@ -124,19 +145,18 @@ const App = () => {
       <div className="board-border">
         <div className="board">
           {game.board.map((cell, index) => (
-            <div key={index} className={`cell ${winner && winner === cell ? "winner" : ""}`} 
-            onClick={() => makeMove(index)} 
-            onKeyDown={(e) => {if (e.key === "Enter" || e.key === " ") makeMove(index);}}
-            tabIndex={0}> {cell} </div>
+            <div
+            key={index}
+            className={`cell ${winner && winner === cell ? "winner" : ""}`}
+            onClick={() => makeMove(index)}
+          > {cell} </div>
           ))}
         </div>
         <p className="current-player">
           {errorMessage && (
           <p className="error-message">{errorMessage}</p>)}
-          {winner
-            ? `Player ${winner} wins!`
-            : `Current Player: ${playerTurn}`}
         </p>
+        <p className="current-player"> {winner ? `Player ${winner} wins!` : `Current Player: ${playerTurn}`}</p>
         <p id="announce" aria-live="assertive">{announcement}<br/></p>
         <button className="reset-button" onClick={resetGame}>
           Reset Game
